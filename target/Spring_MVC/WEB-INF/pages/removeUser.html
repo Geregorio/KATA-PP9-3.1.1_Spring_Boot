@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Remove User</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .form-container {
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: inline-block;
+            width: 100px;
+        }
+        .form-input {
+            display: inline-block;
+        }
+        .form-button {
+            margin-top: 20px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 20px;
+        }
+        .link-item {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<h1>Remove User</h1>
+<div class="container">
+    <div class="form-container">
+        <form th:action="@{/users/remove/search}" th:object="${searchCriteria}" method="post">
+            <div class="form-group">
+                <label for="firstName" class="form-label">First Name:</label>
+                <input type="text" id="firstName" th:field="*{firstName}" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label for="secondName" class="form-label">Second Name:</label>
+                <input type="text" id="secondName" th:field="*{secondName}" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label for="age" class="form-label">Age:</label>
+                <input type="number" id="age" th:field="*{age}" class="form-input" />
+            </div>
+            <div class="form-group form-button">
+                <input type="submit" value="Find" />
+            </div>
+        </form>
+    </div>
+    <div class="links">
+        <a th:href="@{/users}" class="link-item">All Users</a>
+        <a th:href="@{/users/add}" class="link-item">Add User</a>
+        <a th:href="@{/users/edit}" class="link-item">Edit Users</a>
+    </div>
+</div>
+<div class="table-container" th:if="${users}">
+    <h2>Search Results</h2>
+    <table border="1">
+        <tr>
+            <th>First Name</th>
+            <th>Second Name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.firstName}">First Name</td>
+            <td th:text="${user.secondName}">Second Name</td>
+            <td th:text="${user.age}">Age</td>
+            <td>
+                <a th:href="@{/users/remove/delete(id=${user.id})}">Remove</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

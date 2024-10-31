@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<!-- Комментарии делать так -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit user</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .form-container {
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: inline-block;
+            width: 100px;
+        }
+        .form-input {
+            display: inline-block;
+        }
+        .form-button {
+            margin-top: 20px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 20px;
+        }
+        .link-item {
+            margin-bottom: 20px;
+        }
+        .table-container {
+            margin-top: 30px;
+        }
+    </style>
+    <script>
+        function showEditFields() {
+            document.getElementById('editFields').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+<h1>Edit user</h1>
+<br/><br/>
+
+<div>
+    <table border="1">
+        <tr>
+            <th>First name</th>
+            <th>Second name</th>
+            <th>Age</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.firstName}">...</td>
+            <td th:text="${user.secondName}">...</td>
+            <td th:text="${user.age}">...</td>
+            <td>
+
+                <!--<a th:href="@{/users/edit/merge(id=${user.id}, changedUser=${user})}">Edit</a>-->
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="container">
+    <div class="form-container">
+        <form th:action="@{/users/edit/editbutton}" th:object="${changedUser}" method="post">
+            <div class="form-group">
+                <label for="firstName" class="form-label">First Name:</label>
+                <input type="text" id="firstName" th:field="*{firstName}" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label for="secondName" class="form-label">Second Name:</label>
+                <input type="text" id="secondName" th:field="*{secondName}" class="form-input" />
+            </div>
+            <div class="form-group">
+                <label for="age" class="form-label">Age:</label>
+                <input type="number" id="age" th:field="*{age}" class="form-input" />
+            </div>
+            <div class="form-group form-button">
+                <input type="submit" value="Edit" />
+            </div>
+        </form>
+    </div>
+
+    <div class="links">
+        <a href="javascript:void(0);" class="link-item" onclick="showHiddenField()">Show Extra Info</a>
+        <a th:href="@{/users}" class="link-item">All Users</a>
+        <a th:href="@{/users/add}" class="link-item">Add User</a>
+        <a th:href="@{/users/remove}" class="link-item">Remove User</a>
+    </div>
+</div>
+</body>
+</html>
