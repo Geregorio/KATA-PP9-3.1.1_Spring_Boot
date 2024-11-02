@@ -8,7 +8,7 @@ public interface UserService {
     List<User> getAllUsers();
     void addUser(User user);
     void editUser(User user);
-    void removeUser(long id);
-    List<User> searchUsers(User searchCriteria);
-    User getUserById(long id);
+    void removeUser(Long id);
+    List<User> searchUsersByParams(User searchParams);
+    User getUserById(Long id);
 }

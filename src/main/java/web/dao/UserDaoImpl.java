@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void removeUser(long userId) {
+    public void removeUser(Long userId) {
         User user = em.find(User.class, userId);
         if (user != null) {
             em.remove(user);
@@ -45,35 +45,35 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public User getUserById(long id) {
+    public User getUserById(Long id) {
         return em.find(User.class, id);
     }
 
     @Override
     @Transactional
-    public List<User> searchUsers(User searchCriteria) {
+    public List<User> searchUsersByParams(User searchParams) {
         StringBuilder jpql = new StringBuilder("SELECT u FROM User u WHERE 1=1");
 
-        if (searchCriteria.getFirstName() != null && !searchCriteria.getFirstName().isEmpty()) {
+        if (searchParams.getFirstName() != null && !searchParams.getFirstName().isEmpty()) {
             jpql.append(" AND u.firstName LIKE :firstName");
         }
-        if (searchCriteria.getSecondName() != null && !searchCriteria.getSecondName().isEmpty()) {
+        if (searchParams.getSecondName() != null && !searchParams.getSecondName().isEmpty()) {
             jpql.append(" AND u.secondName LIKE :secondName");
         }
-        if (searchCriteria.getAge() != 0) {
+        if (searchParams.getAge() != 0) {
             jpql.append(" AND u.age = :age");
         }
 
         TypedQuery<User> query = em.createQuery(jpql.toString(), User.class);
 
-        if (searchCriteria.getFirstName() != null && !searchCriteria.getFirstName().isEmpty()) {
-            query.setParameter("firstName", "%" + searchCriteria.getFirstName() + "%");
+        if (searchParams.getFirstName() != null && !searchParams.getFirstName().isEmpty()) {
+            query.setParameter("firstName", "%" + searchParams.getFirstName() + "%");
         }
-        if (searchCriteria.getSecondName() != null && !searchCriteria.getSecondName().isEmpty()) {
-            query.setParameter("secondName", "%" + searchCriteria.getSecondName() + "%");
+        if (searchParams.getSecondName() != null && !searchParams.getSecondName().isEmpty()) {
+            query.setParameter("secondName", "%" + searchParams.getSecondName() + "%");
         }
-        if (searchCriteria.getAge() != 0) {
-            query.setParameter("age", searchCriteria.getAge());
+        if (searchParams.getAge() != 0) {
+            query.setParameter("age", searchParams.getAge());
         }
 
         return query.getResultList();

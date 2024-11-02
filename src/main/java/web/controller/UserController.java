@@ -2,7 +2,7 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +19,9 @@ public class UserController {
     private UserService userService;
 
 
+    //AllUsers
     @GetMapping(value = "/users")
-    public String getAllUsers(ModelMap model) {
+    public String getAllUsers(Model model) {
         model.addAttribute("userList", userService.getAllUsers());
         return "users";
     }
@@ -28,13 +29,12 @@ public class UserController {
 
     //AddUser
     @GetMapping("/users/add")
-    public String showAddUserForm(ModelMap model) {
+    public String inputNewUser(Model model) {
         model.addAttribute("user", new User());
         return "addUser";
     }
-
     @PostMapping("/users/add")
-    public String addUser(@ModelAttribute("user") User user, ModelMap model) {
+    public String addUser(@ModelAttribute("user") User user, Model model) {
         try {
             userService.addUser(user);
             return "redirect:/users";
@@ -47,70 +47,39 @@ public class UserController {
 
     //RemoveUser
     @GetMapping("/users/remove")
-    public String showRemoveUserForm(ModelMap model) {
-        model.addAttribute("searchCriteria", new User());
+    public String inputParams(Model model) {
+        model.addAttribute("searchParams", new User());
         return "removeUser";
     }
-
     @PostMapping("/users/remove/search")
-    public String searchUsers(@ModelAttribute("searchCriteria") User searchCriteria, ModelMap model) {
-        List<User> users = userService.searchUsers(searchCriteria);
-        model.addAttribute("users", users);
+    public String searchUsers(@ModelAttribute("searchParams") User searchParams, Model model) {
+        List<User> userList = userService.searchUsersByParams(searchParams);
+        model.addAttribute("users", userList);
         return "removeUser";
     }
-
     @GetMapping("/users/remove/delete")
-    public String removeUserFromSearch(@RequestParam("id") Long userId) {
-        userService.removeUser(userId);
+    public String removeUserFromSearch(@RequestParam("id") Long id) {
+        userService.removeUser(id);
         return "redirect:/users/remove";
     }
 
 
     //EditUser
-//    @GetMapping("/users/edit")
-//    public String editUser(ModelMap model) {
-//        model.addAttribute("userList", userService.getAllUsers());
-//        return "editUser2";
-//    }
-//    @PostMapping("/users/edit/editbutton")
-//    public String copyChanges(ModelMap model) {
-//        model.addAttribute("changedUser", new User());
-//        return "editUser2";
-//    }
-//    @GetMapping("/users/edit/merge")
-//    public String mergeChanges(@RequestParam("id") Long id, @RequestParam("changedUser") User changedUser) {
-//        for(User user : userService.getAllUsers()) {
-//            if (user.getId() == id) {
-//                user = changedUser;
-//                break;
-//            }
-//        }
-//        return "editUser2";
-//    }
-//
-
     @GetMapping("/users/edit")
-    public String showEditUserPage(ModelMap model) {
+    public String showEditUserPage(Model model) {
         model.addAttribute("userList", userService.getAllUsers());
-        return "editUser2"; // Переходим к editUser.html, где отображается таблица
+        return "editUser";
     }
-
     @PostMapping("/users/edit")
-    public String editUser(@ModelAttribute("user") User user, ModelMap model) {
-        User existingUser = userService.getUserById(user.getId());
-
-        if (user.getFirstName() != null && !user.getFirstName().isEmpty()) {
-            existingUser.setFirstName(user.getFirstName());
-        }
-        if (user.getSecondName() != null && !user.getSecondName().isEmpty()) {
-            existingUser.setSecondName(user.getSecondName());
-        }
-        if (user.getAge() > 0) { // Проверяем, чтобы возраст был положительным
-            existingUser.setAge(user.getAge());
-        }
-
-        userService.editUser(existingUser);
-
-        return "redirect:/users";
+    public String editUser(@RequestParam("firstName") String firstName,
+                           @RequestParam("secondName") String secondName,
+                           @RequestParam(value = "age", required = false, defaultValue = "0") Integer age,
+                           @RequestParam("id") Long id) {
+        User changedUser = userService.getUserById(id);
+        changedUser.setFirstName(firstName);
+        changedUser.setSecondName(secondName);
+        changedUser.setAge(age);
+        userService.editUser(changedUser);
+        return "redirect:/users/edit";
     }
 }
