@@ -3,10 +3,7 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.UserService;
 
@@ -15,19 +12,19 @@ import java.util.List;
 @Controller
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-
-    //AllUsers
     @GetMapping(value = "/users")
     public String getAllUsers(Model model) {
         model.addAttribute("userList", userService.getAllUsers());
         return "users";
     }
 
-
-    //AddUser
     @GetMapping("/users/add")
     public String inputNewUser(Model model) {
         model.addAttribute("user", new User());
@@ -44,8 +41,6 @@ public class UserController {
         }
     }
 
-
-    //RemoveUser
     @GetMapping("/users/remove")
     public String inputParams(Model model) {
         model.addAttribute("searchParams", new User());
@@ -57,14 +52,12 @@ public class UserController {
         model.addAttribute("users", userList);
         return "removeUser";
     }
-    @GetMapping("/users/remove/delete")
+    @DeleteMapping("/users/remove/delete")
     public String removeUserFromSearch(@RequestParam("id") Long id) {
         userService.removeUser(id);
         return "redirect:/users/remove";
     }
 
-
-    //EditUser
     @GetMapping("/users/edit")
     public String showEditUserPage(Model model) {
         model.addAttribute("userList", userService.getAllUsers());

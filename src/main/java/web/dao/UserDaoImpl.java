@@ -1,7 +1,6 @@
 package web.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
 
 import javax.persistence.EntityManager;
@@ -16,26 +15,22 @@ public class UserDaoImpl implements UserDao {
     private EntityManager em;
 
     @Override
-    @Transactional
     public List<User> getAllUsers() {
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
         return query.getResultList();
     }
 
     @Override
-    @Transactional
     public void addUser(User user) {
         em.persist(user);
     }
 
     @Override
-    @Transactional
     public void editUser(User user) {
         em.merge(user);
     }
 
     @Override
-    @Transactional
     public void removeUser(Long userId) {
         User user = em.find(User.class, userId);
         if (user != null) {
@@ -44,13 +39,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     public User getUserById(Long id) {
         return em.find(User.class, id);
     }
 
     @Override
-    @Transactional
     public List<User> searchUsersByParams(User searchParams) {
         StringBuilder jpql = new StringBuilder("SELECT u FROM User u WHERE 1=1");
 
