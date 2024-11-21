@@ -1,9 +1,12 @@
 package web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import web.config.WebConfig;
 import web.model.User;
 import web.service.UserService;
 
@@ -13,6 +16,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
 
     @Autowired
     public UserController(UserService userService) {
@@ -52,7 +56,7 @@ public class UserController {
         model.addAttribute("users", userList);
         return "removeUser";
     }
-    @DeleteMapping("/users/remove/delete")
+    @PostMapping("/users/remove/delete")
     public String removeUserFromSearch(@RequestParam("id") Long id) {
         userService.removeUser(id);
         return "redirect:/users/remove";
