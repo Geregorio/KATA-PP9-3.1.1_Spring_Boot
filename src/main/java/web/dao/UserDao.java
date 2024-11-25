@@ -10,6 +10,5 @@ public interface UserDao {
     void addUser(User user);
     void editUser(User user);
     void removeUser(Long id);
-    List<User> searchUsersByParams(User searchCriteria);
     User getUserById(Long id);
 }

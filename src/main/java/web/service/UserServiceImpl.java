@@ -27,8 +27,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void editUser(User user) {
-        userDao.editUser(user);
+    public void editUser(String firstName,
+                         String secondName,
+                         Integer age,
+                         Long id) {
+        User changedUser = new User();
+        changedUser.setFirstName(firstName);
+        changedUser.setSecondName(secondName);
+        changedUser.setAge(age);
+        changedUser.setId(id);
+        userDao.editUser(changedUser);
     }
 
     @Override
@@ -36,10 +44,6 @@ public class UserServiceImpl implements UserService{
         userDao.removeUser(id);
     }
 
-    @Override
-    public List<User> searchUsersByParams(User searchParams) {
-        return userDao.searchUsersByParams(searchParams);
-    }
 
     @Override
     public User getUserById(Long id) {

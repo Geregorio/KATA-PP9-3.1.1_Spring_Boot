@@ -7,8 +7,10 @@ public interface UserService {
 
     List<User> getAllUsers();
     void addUser(User user);
-    void editUser(User user);
+    void editUser(String firstName,
+                  String secondName,
+                  Integer age,
+                  Long id);
     void removeUser(Long id);
-    List<User> searchUsersByParams(User searchParams);
     User getUserById(Long id);
 }

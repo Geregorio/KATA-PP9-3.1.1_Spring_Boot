@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.UserService;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -40,19 +39,13 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/remove")
-    public String inputParams(Model model) {
-        model.addAttribute("searchParams", new User());
-        return "removeUser";
-    }
-    @PostMapping("/users/remove/search")
-    public String searchUsers(@ModelAttribute("searchParams") User searchParams, Model model) {
-        List<User> userList = userService.searchUsersByParams(searchParams);
-        model.addAttribute("users", userList);
+    @GetMapping("users/remove")
+    public String showRemoveTable(Model model) {
+        model.addAttribute("userList", userService.getAllUsers());
         return "removeUser";
     }
     @PostMapping("/users/remove/delete")
-    public String removeUserFromSearch(@RequestParam("id") Long id) {
+    public String removeUser(@RequestParam("id") Long id) {
         userService.removeUser(id);
         return "redirect:/users/remove";
     }
@@ -67,11 +60,7 @@ public class UserController {
                            @RequestParam("secondName") String secondName,
                            @RequestParam(value = "age", required = false, defaultValue = "0") Integer age,
                            @RequestParam("id") Long id) {
-        User changedUser = userService.getUserById(id);
-        changedUser.setFirstName(firstName);
-        changedUser.setSecondName(secondName);
-        changedUser.setAge(age);
-        userService.editUser(changedUser);
+        userService.editUser(firstName, secondName, age, id);
         return "redirect:/users/edit";
     }
 }

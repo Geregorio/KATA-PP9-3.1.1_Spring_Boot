@@ -25,8 +25,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void editUser(User user) {
-        em.merge(user);
+    public void editUser(User changedUser) {
+        em.merge(changedUser);
     }
 
     @Override
@@ -40,34 +40,5 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User getUserById(Long id) {
         return em.find(User.class, id);
-    }
-
-    @Override
-    public List<User> searchUsersByParams(User searchParams) {
-        StringBuilder jpql = new StringBuilder("SELECT u FROM User u WHERE 1=1");
-
-        if (searchParams.getFirstName() != null && !searchParams.getFirstName().isEmpty()) {
-            jpql.append(" AND u.firstName LIKE :firstName");
-        }
-        if (searchParams.getSecondName() != null && !searchParams.getSecondName().isEmpty()) {
-            jpql.append(" AND u.secondName LIKE :secondName");
-        }
-        if (searchParams.getAge() != 0) {
-            jpql.append(" AND u.age = :age");
-        }
-
-        TypedQuery<User> query = em.createQuery(jpql.toString(), User.class);
-
-        if (searchParams.getFirstName() != null && !searchParams.getFirstName().isEmpty()) {
-            query.setParameter("firstName", "%" + searchParams.getFirstName() + "%");
-        }
-        if (searchParams.getSecondName() != null && !searchParams.getSecondName().isEmpty()) {
-            query.setParameter("secondName", "%" + searchParams.getSecondName() + "%");
-        }
-        if (searchParams.getAge() != 0) {
-            query.setParameter("age", searchParams.getAge());
-        }
-
-        return query.getResultList();
     }
 }
